@@ -2,6 +2,7 @@ FROM python:3.9-slim
 
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
+ENV PYTHONPATH=/app
 
 WORKDIR /app
 
@@ -10,11 +11,17 @@ RUN apt-get update && apt-get install -y \
     gcc \
     && rm -rf /var/lib/apt/lists/*
 
-COPY requirements.txt .
+# Copy requirements
+COPY identity_service/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY . .
+# Copy the shared database folder
+COPY database/ ./database/
+
+# Copy the identity service
+COPY identity_service/ .
 
 EXPOSE 8000
 
+# Run the app
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
