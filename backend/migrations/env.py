@@ -55,15 +55,19 @@ def run_migrations_online() -> None:
 
     try:
         with connectable.connect() as connection:
-            # Ensure schemas exist before running migrations
+            # Create schemas and COMMIT them immediately
             for schema in ["community", "identity", "salary"]:
                 connection.execute(text(f"CREATE SCHEMA IF NOT EXISTS {schema}"))
+            connection.commit()
 
+            # Configure the context
             context.configure(
                 connection=connection,
                 target_metadata=target_metadata,
+                include_schemas=True,
             )
 
+            # Run the migrations within a transaction
             with context.begin_transaction():
                 context.run_migrations()
     except Exception as e:
