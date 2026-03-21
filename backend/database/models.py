@@ -31,12 +31,12 @@ class SalarySubmission(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
 # Community Schema Tables
-class Comment(Base):
-    __tablename__ = "comments"
+class Vote(Base):
+    __tablename__ = "votes"
     __table_args__ = {"schema": "community"}
 
-    id = Column(Integer, primary_key=True, index=True)
-    post_id = Column(Integer, index=True)
-    user_id = Column(Integer)
-    content = Column(String, nullable=False)
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    submission_id = Column(UUID(as_uuid=True), index=True, nullable=False)
+    user_id = Column(UUID(as_uuid=True), index=True, nullable=False)
+    vote_type = Column(String(10))
     created_at = Column(DateTime(timezone=True), server_default=func.now())
