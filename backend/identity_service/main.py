@@ -4,8 +4,8 @@ from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 from database.db_connection import get_db
 from database.models import User
-from .schemas import UserCreate, UserLogin
-from .auth import hash_password, verify_password, create_access_token
+from schemas import UserCreate, UserLogin
+from auth import hash_password, verify_password, create_access_token
 import uuid
 import os
 from dotenv import load_dotenv
