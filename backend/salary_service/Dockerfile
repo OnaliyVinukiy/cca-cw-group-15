@@ -12,14 +12,14 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements
-COPY salary-service/requirements.txt .
+COPY salary_service/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the shared database folder
 COPY database/ ./database/
 
 # Copy the salary service
-COPY salary-service/ .
+COPY salary_service/ .
 
 EXPOSE 8000
 

@@ -2,7 +2,7 @@ from fastapi import FastAPI, Depends
 from sqlalchemy.orm import Session
 from database.db_connection import get_db
 from database.models import SalarySubmission
-from schemas import SalaryCreate
+from salary_service.schemas import SalaryCreate
 
 app = FastAPI(title="Salary Submission Service")
 
