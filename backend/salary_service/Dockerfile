@@ -19,9 +19,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY database/ ./database/
 
 # Copy the salary service
-COPY salary_service/ .
+COPY salary_service ./salary_service/
 
 EXPOSE 8000
 
 # Start the service
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "salary_service.main:app", "--host", "0.0.0.0", "--port", "8000"]

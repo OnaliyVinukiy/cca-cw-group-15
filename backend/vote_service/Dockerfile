@@ -19,8 +19,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY database/ ./database/
 
 # Copy the vote service
-COPY vote_service/ .
+COPY vote_service ./vote_service/
 
 EXPOSE 8000
 
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "vote_service.main:app", "--host", "0.0.0.0", "--port", "8000"]

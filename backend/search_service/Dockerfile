@@ -19,9 +19,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY database/ ./database/
 
 # Copy the search service
-COPY search_service/ .
+COPY search_service ./search_service/
 
 EXPOSE 8000
 
 # Start the service
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "search_service.main:app", "--host", "0.0.0.0", "--port", "8000"]
