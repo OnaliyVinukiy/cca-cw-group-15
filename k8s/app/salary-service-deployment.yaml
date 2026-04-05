@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: salary_service
+  name: salary-service
   namespace: app
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: salary_service
+      app: salary-service
   template:
     metadata:
       labels:
-        app: salary_service
+        app: salary-service
     spec:
       imagePullSecrets:
         - name: acr-secret
       containers:
-        - name: salary_service
+        - name: salary-service
           image: techsalaryregistry.azurecr.io/salary_service:v1
           imagePullPolicy: Always  # always pull the latest image for this tag
           ports:

@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: stats_service
+  name: stats-service
   namespace: app
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: stats_service
+      app: stats-service
   template:
     metadata:
       labels:
-        app: stats_service
+        app: stats-service
     spec:
       imagePullSecrets:
         - name: acr-secret
       containers:
-        - name: stats_service
+        - name: stats-service
           image: techsalaryregistry.azurecr.io/stats_service:v1
           imagePullPolicy: Always  # always pull the latest image for this tag
           ports:

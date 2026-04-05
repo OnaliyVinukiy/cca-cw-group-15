@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: search_service
+  name: search-service
   namespace: app
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: search_service
+      app: search-service
   template:
     metadata:
       labels:
-        app: search_service
+        app: search-service
     spec:
       imagePullSecrets:
         - name: acr-secret
       containers:
-        - name: search_service
+        - name: search-service
           image: techsalaryregistry.azurecr.io/search_service:v1
           ports:
             - containerPort: 8000

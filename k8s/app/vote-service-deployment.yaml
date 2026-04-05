@@ -7,16 +7,16 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: vote_service
+      app: vote-service
   template:
     metadata:
       labels:
-        app: vote_service
+        app: vote-service
     spec:
       imagePullSecrets:
         - name: acr-secret
       containers:
-        - name: vote_service
+        - name: vote-service
           image: techsalaryregistry.azurecr.io/vote_service:v1
           imagePullPolicy: Always  # always pull the latest image for this tag
           ports:
