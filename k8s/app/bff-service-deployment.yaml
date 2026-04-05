@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bff-service
+  namespace: app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bff-service
+  template:
+    metadata:
+      labels:
+        app: bff-service
+    spec:
+      imagePullSecrets:
+        - name: acr-secret
+      containers:
+        - name: bff-service
+          image: techsalaryregistry.azurecr.io/bff_service:v1
+          ports:
+            - containerPort: 8000
+          env:
+            - name: IDENTITY_SERVICE_URL
+              value: "http://identity-service.app.svc.cluster.local:8000"
+            - name: SALARY_SERVICE_URL
+              value: "http://salary-service.app.svc.cluster.local:8000"
+            - name: VOTE_SERVICE_URL
+              value: "http://vote-service.app.svc.cluster.local:8000"
+            - name: SEARCH_SERVICE_URL
+              value: "http://search-service.app.svc.cluster.local:8000"
+            - name: STATS_SERVICE_URL
+              value: "http://stats-service.app.svc.cluster.local:8000"
+            - name: SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret # Or a specific jwt-secret if you created one
+                  key: SECRET_KEY
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 15
