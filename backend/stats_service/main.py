@@ -5,9 +5,9 @@ from fastapi import FastAPI, Depends
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 
-from ..database.db_connection import get_db
-from ..database.models import SalarySubmission
-from .schemas import Stats
+from database.db_connection import get_db
+from database.models import SalarySubmission
+from stats_service.schemas import Stats
 
 app = FastAPI(title="Stats Service")
 

@@ -6,10 +6,10 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from jose import jwt, JWTError
 from sqlalchemy.orm import Session
 
-from ..database.db_connection import get_db
-from ..database.models import Vote, SalarySubmission
-from .schemas import VoteCreate, VoteEntry, UpdatedSubmission
-from .enums import VoteType, SubmissionStatus
+from database.db_connection import get_db
+from database.models import Vote, SalarySubmission
+from vote_service.schemas import VoteCreate, VoteEntry, UpdatedSubmission
+from vote_service.enums import VoteType, SubmissionStatus
 
 app = FastAPI(title="Voting Service")
 
