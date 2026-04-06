@@ -1,0 +1,130 @@
+.login-container,
+.signup-container {
+  max-width: 420px;
+  margin: 50px auto;
+  padding: 50px 40px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(40, 54, 24, 0.1);
+  border: 2px solid #E8E6DE;
+  animation: slideIn 0.4s ease-out;
+}
+
+@keyframes slideIn {
+  from { 
+    opacity: 0; 
+    transform: translateY(20px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}
+
+.login-container h2,
+.signup-container h2 {
+  color: #606C38;
+  margin-bottom: 35px;
+  text-align: center;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.login-container form,
+.signup-container form {
+  gap: 20px;
+}
+
+.login-container input,
+.signup-container input {
+  width: 100%;
+  padding: 13px 16px;
+  border: 2px solid #E8E6DE;
+  border-radius: 10px;
+  font-size: 15px;
+  background-color: #FEFAE0;
+  color: #283618;
+  transition: all 0.3s ease;
+}
+
+.login-container input:focus,
+.signup-container input:focus {
+  outline: none;
+  border-color: #DDA15E;
+  background-color: white;
+  box-shadow: 0 0 0 4px rgba(221, 161, 94, 0.1);
+}
+
+.login-container button,
+.signup-container button {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, #DDA15E 0%, #BC6C25 100%);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+  margin-top: 15px;
+}
+
+.login-container button:hover,
+.signup-container button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(188, 108, 37, 0.3);
+}
+
+.login-container button:active,
+.signup-container button:active {
+  transform: translateY(0);
+}
+
+.login-container p,
+.signup-container p {
+  text-align: center;
+  color: #283618;
+  margin-top: 25px;
+  font-size: 15px;
+}
+
+.login-container a,
+.signup-container a {
+  color: #DDA15E;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.login-container a:hover,
+.signup-container a:hover {
+  color: #BC6C25;
+  text-decoration: underline;
+}
+
+.error-message {
+  background-color: #FFE5E5;
+  color: #C41E3A;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  border-left: 4px solid #C41E3A;
+  text-align: center;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.success-message {
+  background-color: #E8F5E9;
+  color: #606C38;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  border-left: 4px solid #606C38;
+  text-align: center;
+  font-weight: 500;
+  font-size: 14px;
+}

@@ -2,16 +2,26 @@ import os
 from typing import Optional
 
 from fastapi import FastAPI, Depends, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from jose import jwt, JWTError
 from sqlalchemy.orm import Session
 
-from database.db_connection import get_db
-from database.models import Vote, SalarySubmission
-from vote_service.schemas import VoteCreate, VoteEntry, UpdatedSubmission
-from vote_service.enums import VoteType, SubmissionStatus
+from backend.database.db_connection import get_db
+from backend.database.models import Vote, SalarySubmission
+from backend.vote_service.schemas import VoteCreate, VoteEntry, UpdatedSubmission
+from backend.vote_service.enums import VoteType, SubmissionStatus
 
 app = FastAPI(title="Voting Service")
+
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Thresholds
 UPVOTE_THRESHOLD = 5

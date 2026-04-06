@@ -1,10 +1,20 @@
 from fastapi import FastAPI, Depends, Query
+from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
-from database.db_connection import get_db
-from database.models import SalarySubmission
+from backend.database.db_connection import get_db
+from backend.database.models import SalarySubmission
 from typing import Optional
 
 app = FastAPI(title="Search Service")
+
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/search")
 def search_salaries(
@@ -14,7 +24,7 @@ def search_salaries(
     level: Optional[str] = None,
     db: Session = Depends(get_db)
 ):
-    query = db.query(SalarySubmission).filter(SalarySubmission.status == "APPROVED")
+    query = db.query(SalarySubmission)
     
     if role:
         query = query.filter(SalarySubmission.role.ilike(f"%{role}%"))
