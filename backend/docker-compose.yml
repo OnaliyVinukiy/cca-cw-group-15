@@ -1,0 +1,114 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: adminpassword
+      POSTGRES_DB: tech_pay_scale_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+
+  identity-service:
+    build:
+      context: .
+      dockerfile: identity_service/Dockerfile
+    ports:
+      - "8001:8000"
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: tech_pay_scale_db
+      DB_USER: postgres
+      DB_PASSWORD: adminpassword
+      SECRET_KEY: supersecret
+    depends_on:
+      - postgres
+
+  salary-service:
+    build:
+      context: .
+      dockerfile: salary_service/Dockerfile
+    ports:
+      - "8002:8000"
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: tech_pay_scale_db
+      DB_USER: postgres
+      DB_PASSWORD: adminpassword
+    depends_on:
+      - postgres
+
+  vote-service:
+    build:
+      context: .
+      dockerfile: vote_service/Dockerfile
+    ports:
+      - "8003:8000"
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: tech_pay_scale_db
+      DB_USER: postgres
+      DB_PASSWORD: adminpassword
+    depends_on:
+      - postgres
+
+  search-service:
+    build:
+      context: .
+      dockerfile: search_service/Dockerfile
+    ports:
+      - "8004:8000"
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: tech_pay_scale_db
+      DB_USER: postgres
+      DB_PASSWORD: adminpassword
+    depends_on:
+      - postgres
+
+  stats-service:
+    build:
+      context: .
+      dockerfile: stats_service/Dockerfile
+    ports:
+      - "8005:8000"
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: tech_pay_scale_db
+      DB_USER: postgres
+      DB_PASSWORD: adminpassword
+    depends_on:
+      - postgres
+
+  bff-service:
+    build:
+      context: .
+      dockerfile: bff_service/Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      IDENTITY_SERVICE_URL: http://identity-service:8000
+      SALARY_SERVICE_URL: http://salary-service:8000
+      VOTE_SERVICE_URL: http://vote-service:8000
+      SEARCH_SERVICE_URL: http://search-service:8000
+      STATS_SERVICE_URL: http://stats-service:8000
+    depends_on:
+      - identity-service
+      - salary-service
+      - vote-service
+      - search-service
+      - stats-service
+
+volumes:
+  postgres_data:

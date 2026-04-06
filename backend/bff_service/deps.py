@@ -6,10 +6,6 @@ from fastapi import Depends, HTTPException
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from jose import JWTError, jwt
 
-_env_root = Path(__file__).resolve().parents[2]
-load_dotenv(_env_root / ".env")
-load_dotenv()
-
 SECRET_KEY = os.getenv("SECRET_KEY", "supersecret")
 ALGORITHM = "HS256"
 
