@@ -1,27 +1,20 @@
 import os
 from contextlib import asynccontextmanager
-from pathlib import Path
 from typing import Optional
 
 import httpx
-from dotenv import load_dotenv
 from fastapi import Depends, FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 
 from deps import get_current_user_id
 from schemas import SalaryCreate, UserCreate, UserLogin, VoteCreate
 
-# Project root = backend/bff-service/main.py -> parents[2]
-_env_root = Path(__file__).resolve().parents[2]
-load_dotenv(_env_root / ".env")
-load_dotenv()
-
+# Use environment variables from Docker — no need for load_dotenv
 IDENTITY_SERVICE_URL = os.getenv("IDENTITY_SERVICE_URL", "http://localhost:8001").rstrip("/")
 SALARY_SERVICE_URL = os.getenv("SALARY_SERVICE_URL", "http://localhost:8002").rstrip("/")
 VOTE_SERVICE_URL = os.getenv("VOTE_SERVICE_URL", "http://localhost:8003").rstrip("/")
 SEARCH_SERVICE_URL = os.getenv("SEARCH_SERVICE_URL", "http://localhost:8004").rstrip("/")
 STATS_SERVICE_URL = os.getenv("STATS_SERVICE_URL", "http://localhost:8005").rstrip("/")
-
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
