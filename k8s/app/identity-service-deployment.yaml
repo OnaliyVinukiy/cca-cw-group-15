@@ -17,7 +17,7 @@ spec:
         - name: acr-secret
       containers:
         - name: identity-service
-          image: techsalaryregistry.azurecr.io/identity_service:v1
+          image: techsalaryregistry.azurecr.io/identity_service:v3
           ports:
             - containerPort: 8000
           env:
@@ -26,6 +26,11 @@ spec:
                 secretKeyRef:
                   name: db-secret
                   key: DB_HOST
+            - name: DB_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: DB_PORT
             - name: DB_NAME
               valueFrom:
                 secretKeyRef:
@@ -41,13 +46,13 @@ spec:
                 secretKeyRef:
                   name: db-secret
                   key: DB_PASSWORD
-            - name: SECRET_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: db-secret
-                  key: SECRET_KEY
           readinessProbe:
             httpGet:
-              path: /health
+              path: /docs
               port: 8000
-            initialDelaySeconds: 10
+            initialDelaySeconds: 30
+          livenessProbe:
+            httpGet:
+              path: /docs
+              port: 8000
+            initialDelaySeconds: 30
