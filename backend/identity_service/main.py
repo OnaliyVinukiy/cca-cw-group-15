@@ -1,21 +1,30 @@
 # backend/identity_service/main.py
 
 from fastapi import FastAPI, Depends, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
-from database.db_connection import get_db
-from database.models import User
-from schemas import UserCreate, UserLogin
-from auth import hash_password, verify_password, create_access_token
+from backend.database.db_connection import get_db, engine
+from backend.database.models import User, Base
+from backend.identity_service.schemas import UserCreate, UserLogin
+from backend.identity_service.auth import hash_password, verify_password, create_access_token
 import uuid
 import os
 from dotenv import load_dotenv
 from sqlalchemy import text
-from database.db_connection import engine
-from database.models import Base
+
 # Load environment variables from .env
 load_dotenv()
 
 app = FastAPI(title="Identity Service API")
+
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allow all origins
+    allow_credentials=True,
+    allow_methods=["*"],  # Allow all methods
+    allow_headers=["*"],  # Allow all headers
+)
 
 with engine.connect() as conn:
     conn.execute(text("CREATE SCHEMA IF NOT EXISTS identity"))

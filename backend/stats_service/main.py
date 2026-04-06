@@ -2,15 +2,23 @@ import os
 from typing import Optional
 
 from fastapi import FastAPI, Depends
+from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 
-from database.db_connection import get_db
-from database.models import SalarySubmission
-from stats_service.schemas import Stats
+from backend.database.db_connection import get_db
+from backend.database.models import SalarySubmission
+from backend.stats_service.schemas import Stats
 
 app = FastAPI(title="Stats Service")
-
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 @app.get("/stats")
 def calculate_stats(
     role: Optional[str] = None,
