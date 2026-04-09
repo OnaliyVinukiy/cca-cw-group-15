@@ -18,8 +18,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the shared database folder
 COPY database/ ./database/
 
-# Copy the identity service
-COPY identity_service ./identity_service/
+# Copy identity service
+COPY identity_service/ ./identity_service/
 
 EXPOSE 8000
 
