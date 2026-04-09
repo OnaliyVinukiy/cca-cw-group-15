@@ -3,10 +3,10 @@
 from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
-from backend.database.db_connection import get_db, engine
-from backend.database.models import User, Base
-from backend.identity_service.schemas import UserCreate, UserLogin
-from backend.identity_service.auth import hash_password, verify_password, create_access_token
+from database.db_connection import get_db, engine
+from database.models import User, Base
+from identity_service.schemas import UserCreate, UserLogin
+from identity_service.auth import hash_password, verify_password, create_access_token
 import uuid
 import os
 from dotenv import load_dotenv

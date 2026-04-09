@@ -2,7 +2,7 @@ from sqlalchemy import Column, String, DateTime, Integer, Numeric, Boolean
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.sql import func
 import uuid
-from backend.database.db_connection import Base
+from database.db_connection import Base
 
 # Identity Schema Tables
 class User(Base):

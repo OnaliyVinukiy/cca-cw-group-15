@@ -19,7 +19,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY database/ ./database/
 
 # Copy the salary service
-COPY salary_service ./salary_service/
+COPY salary_service/ ./salary_service/
 
 EXPOSE 8000
 
