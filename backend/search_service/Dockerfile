@@ -19,7 +19,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY database/ ./database/
 
 # Copy the search service
-COPY search_service ./search_service/
+COPY search_service/ ./search_service/
 
 EXPOSE 8000
 

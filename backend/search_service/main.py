@@ -1,8 +1,9 @@
 from fastapi import FastAPI, Depends, Query
+from fastapi.encoders import jsonable_encoder
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
-from backend.database.db_connection import get_db
-from backend.database.models import SalarySubmission
+from database.db_connection import get_db
+from database.models import SalarySubmission
 from typing import Optional
 
 app = FastAPI(title="Search Service")
@@ -36,4 +37,4 @@ def search_salaries(
         query = query.filter(SalarySubmission.experience_level == level)
         
     results = query.all()
-    return results
+    return jsonable_encoder(results)

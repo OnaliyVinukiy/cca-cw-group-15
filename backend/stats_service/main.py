@@ -6,7 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 
-from backend.database.db_connection import get_db
+from database.db_connection import get_db
 from backend.database.models import SalarySubmission
 from backend.stats_service.schemas import Stats
 
