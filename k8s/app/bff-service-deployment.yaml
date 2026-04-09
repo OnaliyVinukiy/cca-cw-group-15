@@ -17,7 +17,7 @@ spec:
         - name: acr-secret
       containers:
         - name: bff-service
-          image: techsalaryregistry.azurecr.io/bff_service:v1
+          image: techsalaryregistry.azurecr.io/bff_service:v2
           ports:
             - containerPort: 8000
           env:

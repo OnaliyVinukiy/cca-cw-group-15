@@ -1,0 +1,29 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: main-ingress
+  namespace: app
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    # Forward path as-is, do not rewrite /api
+spec:
+  ingressClassName: nginx
+  rules:
+  - http:
+      paths:
+        # BFF Service - /api/* (no rewrite)
+        - path: /api
+          pathType: Prefix
+          backend:
+            service:
+              name: bff-service
+              port:
+                number: 8000
+        # Frontend - catch all other paths
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: frontend
+              port:
+                number: 80
