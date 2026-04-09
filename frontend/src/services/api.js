@@ -1,12 +1,13 @@
 import axios from 'axios';
 
-// Base URLs for each microservice (these run on localhost during development)
+
+const API_BASE_URL = ''; 
 const API_BASE = {
-  identity: 'http://localhost:8001',
-  salary: 'http://localhost:8002',
-  search: 'http://localhost:8003',
-  stats: 'http://localhost:8004',
-  vote: 'http://localhost:8005',
+  identity: `${API_BASE_URL}/api`,
+  salary: `${API_BASE_URL}/api`,
+  search: `${API_BASE_URL}/api`,
+  stats: `${API_BASE_URL}/api`,
+  vote: `${API_BASE_URL}/api`,
 };
 
 // Store JWT token from login
