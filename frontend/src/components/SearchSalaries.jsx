@@ -19,13 +19,17 @@ export default function SearchSalaries() {
     setFilters({ ...filters, [name]: value });
   };
 
-  const handleSearch = async (e) => {
+ const handleSearch = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError('');
     try {
       const data = await searchSalaries(filters);
-      setResults(data);
+      
+      // Filter the data to include ONLY 'APPROVED' status
+      const approvedData = data.filter(salary => salary.status === 'APPROVED');
+      
+      setResults(approvedData);
       setSearched(true);
     } catch (err) {
       setError('Failed to search salaries. Please try again.');

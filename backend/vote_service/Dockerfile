@@ -19,7 +19,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY database/ ./database/
 
 # Copy the vote service
-COPY vote_service ./vote_service/
+COPY vote_service/ ./vote_service/
 
 EXPOSE 8000
 
