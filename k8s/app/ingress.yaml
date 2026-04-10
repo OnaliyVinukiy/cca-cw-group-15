@@ -5,11 +5,18 @@ metadata:
   namespace: app
   annotations:
     kubernetes.io/ingress.class: nginx
-    # Forward path as-is, do not rewrite /api
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
 spec:
   ingressClassName: nginx
+  tls:
+    - hosts:
+        - 135.171.160.55.nip.io
+      secretName: techsalary-tls
   rules:
-  - http:
+  - host: 135.171.160.55.nip.io
+    http:
       paths:
         # BFF Service - /api/* (no rewrite)
         - path: /api
