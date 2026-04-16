@@ -1,80 +1,94 @@
 # Tech Salary Scale
 
-This repository contains the microservices and database infrastructure for the Cloud Computing Applications(CCA) coursework. Follow the below steps to set up your local development environment for coding and testing.
+This repository contains the **Kubernetes Manifests (YAML)** and microservices infrastructure for the Tech Salary Scale platform. The system is architected as a cloud-native application deployed on **Azure Kubernetes Service (AKS)**.
 
-## Local Setup Guide
-
-### Prerequisites
-Before starting, ensure you have the following installed on your machine:
-* **Docker Desktop**: Ensure the Docker engine is running.
-* **Python 3.10+**: Required for running the initialization scripts and microservices.
-* **VS Code**: Recommended for a consistent development experience.
+## Cloud Architecture Overview
+This system emphasizes infrastructure orchestration and security as follows:
+* **Logical Isolation**: Separated into `app` (Microservices) and `data` (PostgreSQL) namespaces.
+* **External Access**: Managed via an **Azure Load Balancer** and **Nginx Ingress Controller** (Layer 7 routing).
+* **Persistence**: Implemented using **Persistent Volume Claims (PVC)** to ensure data durability in the `data` namespace.
+* **Secret Management**: Sensitive credentials are externalized using **Kubernetes Secrets** (Base64 encoded) and injected into pods at runtime.
 
 ---
 
-### Step 1: Environment Configuration
-1. In the project root folder, create a new file named `.env`.
-2. Copy the contents from `.env.example` into your new `.env` file.
-3. Important: Update the DB_PASSWORD and DB_USER to match any values you like; Docker will use them to initialize your container.
+## Azure Deployment Guide (Reproducibility)
 
-    **Default `.env` values:**
-    ```env
-    DB_HOST=localhost
-    DB_PORT=5432
-    DB_USER=admin
-    DB_PASSWORD=adminpassword
-    DB_NAME=tech_pay_scale_db
-    ```
-
-
-
-### Step 2: Spin up the Local Database
-We use Docker Compose to run a PostgreSQL 15 instance. This setup exactly mirrors the architecture used in our Azure AKS cluster.
-
-Run this command in the root folder:
+### 1. Registry Authentication
+Login to the Azure Container Registry (ACR) to push your microservice images:
+```bash
+az login
+az acr login --name techsalaryscale
 ```
+
+### 2. Build and Push Images
+Build your images and push them to ACR. Ensure you tag them correctly for the manifests.
+```bash
+# Example for Salary Service
+cd backend/salary_service
+
+docker build -t techsalaryscale.azurecr.io/salary-service:v1 .
+
+docker push techsalaryscale.azurecr.io/salary-service:v1
+```
+### 3. Deploy Kubernetes Manifests
+Apply the cloud configurations in the following order to the AKS cluster:
+```bash
+# 1. Create Namespaces
+kubectl apply -f k8s/namespaces/
+
+# 2. Deploy Storage & Database (Data Namespace)
+kubectl apply -f k8s/db/ -n data
+
+# 3. Apply Configuration & Secrets (App Namespace)
+kubectl apply -f k8s/config/app-secrets.yaml -n app
+
+# 4. Apply Configuration & Secrets (Data Namespace)
+kubectl apply -f k8s/config/db-secrets.yaml -n app
+
+# 4. Deploy Microservices & Ingress (App Namespace)
+kubectl apply -f k8s/app/ -n app
+```
+
+## Local Development Guide
+
+### 1. Environment Configuration
+Create a `.env` file in the root folder based on `.env.example`:
+```bash
+DB_HOST=localhost
+DB_PORT=5432
+DB_USER=admin
+DB_PASSWORD=adminpassword
+DB_NAME=tech_pay_scale_db
+```
+
+### 2. Local Database (Docker Compose)
+Spins up a local PostgreSQL instance mirroring the Azure production environment:
+```bash
 docker compose up -d
 ```
-Verify the container is running by running the following command in your terminal.
+### 3. Schema Initialization
+Initializes the three logical schemas: `identity`, `salary`, and `community`.
+```bash
+pip install psycopg2-binary python-dotenv sqlalchemy pydantic-settings
+
+python backend/database/db_init.py
 ```
-docker ps
-```
 
-### Step 3: Initialize Database Schemas
-Once the Docker container is "Started," you must run the initialization script. This creates the three required schemas: `identity`, `salary`, and `community`.
+## Repository Structure (Infrastructure Focused)
+- `/k8s`: Core Infrastructure Folder
+    - `/app`: Deployment and Service manifests for all 7 microservices.
+    - `/db`: PostgreSQL Deployment, Service, and PersistentVolumeClaim.
+    - `/config`: Kubernetes Secrets and ConfigMaps.
+    - `/namespaces`: Definitions for `app` and `data`.
+    - `ingress.yaml`: Ingress rules for path-based routing (`/` vs `/api`).
 
-1. Install Dependencies:
-    ```
-    pip install psycopg2-binary python-dotenv sqlalchemy pydantic-settings
-    ```
+- `/backend`: Source code for FastAPI microservices (BFF, Identity, Salary, Search, Stats, Vote).
 
-2. Run the Initializer:
-    ```
-    python backend/database/db_init.py
-    ```
+- `/frontend`: React.js source code (Multi-stage Docker builds).
 
-### Project Structure
+## Security & Self-Healing
+- Probes: Every deployment includes Liveness and Readiness probes to ensure the cluster automatically restarts unhealthy containers.
 
-`/frontend`: For frontend implementations
+- Isolation: Internal services are exposed via ClusterIP and are not accessible from the public internet; they sit behind the BFF "gatekeeper."
 
-`/backend`: Contains dedicated folders for all FastAPI microservices (BFF, Identity, Salary, Search, Stats and Vote.).
-
-`/backend/database`: Contains shared logic including `db_connection.py` and `models.py`. Use these for all DB interactions to ensure consistency.
-
-`/k8s`: Kubernetes manifests for Azure deployment.
-
-
-### Working with the Database in Python
-To interact with the database in your service, import the `get_db` dependency and the relevant models. This connection works both locally and in the Azure cluster without code changes.
-
-For example:
-```
-from database.db_connection import get_db
-from database.models import User
-from sqlalchemy.orm import Session
-from fastapi import Depends
-
-@app.get("/users")
-def read_users(db: Session = Depends(get_db)):
-    return db.query(User).all()
-```
+- Statelessness: All application pods are stateless; all state is managed via the persistent database layer in the data namespace.
