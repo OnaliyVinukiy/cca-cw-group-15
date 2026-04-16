@@ -7,8 +7,8 @@ from sqlalchemy.orm import Session
 from sqlalchemy import func
 
 from database.db_connection import get_db
-from backend.database.models import SalarySubmission
-from backend.stats_service.schemas import Stats
+from database.models import SalarySubmission
+from stats_service.schemas import Stats
 
 app = FastAPI(title="Stats Service")
 # Add CORS middleware
