@@ -17,7 +17,7 @@ spec:
         - name: acr-secret
       containers:
         - name: search-service
-          image: techsalaryregistry.azurecr.io/search_service:v4
+          image: techsalaryscale.azurecr.io/search_service:v1
           ports:
             - containerPort: 8000
           env:

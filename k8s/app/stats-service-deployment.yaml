@@ -17,7 +17,7 @@ spec:
         - name: acr-secret
       containers:
         - name: stats-service
-          image: techsalaryregistry.azurecr.io/stats_service:v1
+          image: techsalaryscale.azurecr.io/stats_service:v1
           imagePullPolicy: Always  # always pull the latest image for this tag
           ports:
             - containerPort: 8000

@@ -17,7 +17,7 @@ spec:
         - name: acr-secret
       containers:
         - name: salary-service
-          image: techsalaryregistry.azurecr.io/salary_service:v4
+          image: techsalaryscale.azurecr.io/salary_service:v1
           imagePullPolicy: Always  # always pull the latest image for this tag
           ports:
             - containerPort: 8000

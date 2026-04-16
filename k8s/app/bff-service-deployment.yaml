@@ -17,7 +17,7 @@ spec:
         - name: acr-secret
       containers:
         - name: bff-service
-          image: techsalaryregistry.azurecr.io/bff_service:v2
+          image: techsalaryscale.azurecr.io/bff_service:v1
           ports:
             - containerPort: 8000
           env:
@@ -34,7 +34,7 @@ spec:
             - name: SECRET_KEY
               valueFrom:
                 secretKeyRef:
-                  name: db-secret # Or a specific jwt-secret if you created one
+                  name: db-secret
                   key: SECRET_KEY
           readinessProbe:
             httpGet:

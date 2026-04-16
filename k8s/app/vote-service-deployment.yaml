@@ -17,7 +17,7 @@ spec:
         - name: acr-secret
       containers:
         - name: vote-service
-          image: techsalaryregistry.azurecr.io/vote_service:v5
+          image: techsalaryscale.azurecr.io/vote_service:v1
           imagePullPolicy: Always  # always pull the latest image for this tag
           ports:
             - containerPort: 8000

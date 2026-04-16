@@ -17,7 +17,7 @@ spec:
         - name: acr-secret
       containers:
         - name: identity-service
-          image: techsalaryregistry.azurecr.io/identity_service:v5
+          image: techsalaryscale.azurecr.io/identity_service:v1
           ports:
             - containerPort: 8000
           env:
