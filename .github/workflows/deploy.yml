@@ -20,32 +20,32 @@ jobs:
 
       - name: Build and Push Identity Service
         run: |
-          docker build -t techsalaryscale.azurecr.io/identity_service:${{ github.sha }} -f identity_service/Dockerfile ./backend.
+          docker build -t techsalaryscale.azurecr.io/identity_service:${{ github.sha }} -f identity_service/Dockerfile ./backend
           docker push techsalaryscale.azurecr.io/identity_service:${{ github.sha }}
 
       - name: Build and Push Salary Service
         run: |
-          docker build -t techsalaryscale.azurecr.io/salary_service:${{ github.sha }} -f salary_service/Dockerfile ./backend.
+          docker build -t techsalaryscale.azurecr.io/salary_service:${{ github.sha }} -f salary_service/Dockerfile ./backend
           docker push techsalaryscale.azurecr.io/salary_service:${{ github.sha }}
       
       - name: Build and Push Search Service
         run: |
-          docker build -t techsalaryscale.azurecr.io/search_service:${{ github.sha }} -f search_service/Dockerfile ./backend.
+          docker build -t techsalaryscale.azurecr.io/search_service:${{ github.sha }} -f search_service/Dockerfile ./backend
           docker push techsalaryscale.azurecr.io/search_service:${{ github.sha }}
 
       - name: Build and Push Stats Service
         run: |
-          docker build -t techsalaryscale.azurecr.io/stats_service:${{ github.sha }} -f stats_service/Dockerfile ./backend.
+          docker build -t techsalaryscale.azurecr.io/stats_service:${{ github.sha }} -f stats_service/Dockerfile ./backend
           docker push techsalaryscale.azurecr.io/stats_service:${{ github.sha }}
 
       - name: Build and Push Vote Service
         run: |
-          docker build -t techsalaryscale.azurecr.io/vote_service:${{ github.sha }} -f vote_service/Dockerfile ./backend.
+          docker build -t techsalaryscale.azurecr.io/vote_service:${{ github.sha }} -f vote_service/Dockerfile ./backend
           docker push techsalaryscale.azurecr.io/vote_service:${{ github.sha }}
 
       - name: Build and Push BFF Service
         run: |
-          docker build -t techsalaryscale.azurecr.io/bff_service:${{ github.sha }} -f bff_service/Dockerfile ./backend.
+          docker build -t techsalaryscale.azurecr.io/bff_service:${{ github.sha }} -f bff_service/Dockerfile ./backend
           docker push techsalaryscale.azurecr.io/bff_service:${{ github.sha }}
 
       - name: Build and Push Frontend
