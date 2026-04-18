@@ -1,0 +1,87 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ github.sha }} 
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Docker Login to ACR
+        run: |
+          echo "${{ secrets.ACR_PASSWORD }}" | docker login techsalaryscale.azurecr.io \
+            -u ${{ secrets.ACR_USERNAME }} --password-stdin
+
+      - name: Build and Push Identity Service
+        run: |
+          docker build -t techsalaryscale.azurecr.io/identity_service:${{ github.sha }} -f backend/identity_service/Dockerfile .
+          docker push techsalaryscale.azurecr.io/identity_service:${{ github.sha }}
+
+      - name: Build and Push Salary Service
+        run: |
+          docker build -t techsalaryscale.azurecr.io/salary_service:${{ github.sha }} -f backend/salary_service/Dockerfile .
+          docker push techsalaryscale.azurecr.io/salary_service:${{ github.sha }}
+      
+      - name: Build and Push Search Service
+        run: |
+          docker build -t techsalaryscale.azurecr.io/search_service:${{ github.sha }} -f backend/search_service/Dockerfile .
+          docker push techsalaryscale.azurecr.io/search_service:${{ github.sha }}
+
+      - name: Build and Push Stats Service
+        run: |
+          docker build -t techsalaryscale.azurecr.io/stats_service:${{ github.sha }} -f backend/stats_service/Dockerfile .
+          docker push techsalaryscale.azurecr.io/stats_service:${{ github.sha }}
+
+      - name: Build and Push Vote Service
+        run: |
+          docker build -t techsalaryscale.azurecr.io/vote_service:${{ github.sha }} -f backend/vote_service/Dockerfile .
+          docker push techsalaryscale.azurecr.io/vote_service:${{ github.sha }}
+
+      - name: Build and Push BFF Service
+        run: |
+          docker build -t techsalaryscale.azurecr.io/bff_service:${{ github.sha }} -f backend/bff_service/Dockerfile .
+          docker push techsalaryscale.azurecr.io/bff_service:${{ github.sha }}
+
+      - name: Build and Push Frontend
+        run: |
+          docker build -t techsalaryscale.azurecr.io/frontend:${{ github.sha }} -f frontend/Dockerfile .
+          docker push techsalaryscale.azurecr.io/frontend:${{ github.sha }}
+
+  deploy-to-aks:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Docker Login to ACR
+        run: |
+          echo "${{ secrets.ACR_PASSWORD }}" | docker login techsalaryscale.azurecr.io \
+            -u ${{ secrets.ACR_USERNAME }} --password-stdin
+
+      - name: Set AKS Context
+        uses: azure/aks-set-context@v3
+        with:
+          resource-group: CCA-Project-RG
+          cluster-name: techsalary-aks
+
+      - name: Deploy & Restart Pods
+        run: |
+          kubectl set image deployment/identity-service identity-service=techsalaryscale.azurecr.io/identity_service:${{ github.sha }} -n app
+          kubectl set image deployment/salary-service salary-service=techsalaryscale.azurecr.io/salary_service:${{ github.sha }} -n app
+          kubectl set image deployment/search-service search-service=techsalaryscale.azurecr.io/search_service:${{ github.sha }} -n app
+          kubectl set image deployment/stats-service stats-service=techsalaryscale.azurecr.io/stats_service:${{ github.sha }} -n app
+          kubectl set image deployment/vote-service vote-service=techsalaryscale.azurecr.io/vote_service:${{ github.sha }} -n app
+          kubectl set image deployment/bff-service bff-service=techsalaryscale.azurecr.io/bff_service:${{ github.sha }} -n app
+          kubectl set image deployment/frontend frontend=techsalaryscale.azurecr.io/frontend:${{ github.sha }} -n app
+          
+          kubectl rollout status deployment/identity-service -n app
+          kubectl rollout status deployment/salary-service -n app
+          kubectl rollout status deployment/search-service -n app
+          kubectl rollout status deployment/stats-service -n app
+          kubectl rollout status deployment/vote-service -n app
+          kubectl rollout status deployment/bff-service -n app
+          kubectl rollout status deployment/frontend -n app
