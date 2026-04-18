@@ -57,7 +57,7 @@ jobs:
       - name: Build and Push Frontend
         run: |
           docker build -t techsalaryscale.azurecr.io/frontend:${{ github.sha }} \
-            -f frontend/Dockerfile .
+            -f frontend/Dockerfile ./frontend
           docker push techsalaryscale.azurecr.io/frontend:${{ github.sha }}
 
   deploy-to-aks:
