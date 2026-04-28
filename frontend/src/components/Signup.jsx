@@ -1,38 +1,45 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { signup } from '../services/api';
-import '../styles/Auth.css';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { signup } from "../services/api";
+import "../styles/Auth.css";
 
 export default function Signup() {
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState('');
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSignup = async (e) => {
     e.preventDefault();
-    setError('');
+    setError("");
+    setSuccess("");
 
     if (password !== confirmPassword) {
-      setError('Passwords do not match');
+      setError("Passwords do not match");
       return;
     }
 
     if (password.length < 6) {
-      setError('Password must be at least 6 characters');
+      setError("Password must be at least 6 characters");
       return;
     }
 
     setLoading(true);
+
     try {
       await signup(username, email, password);
-      alert('Account created successfully! Please log in.');
-      navigate('/login');
+
+      setSuccess("Account created successfully! Redirecting to login...");
+
+      setTimeout(() => {
+        navigate("/login");
+      }, 1200);
     } catch (err) {
-      setError(err.detail || 'Signup failed. Please try again.');
+      setError(err.detail || "Signup failed. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -41,8 +48,11 @@ export default function Signup() {
   return (
     <div className="signup-container">
       <h2>Create Account</h2>
+
       <form onSubmit={handleSignup}>
         {error && <div className="error-message">{error}</div>}
+        {success && <div className="success-message">{success}</div>}
+
         <input
           type="text"
           placeholder="Username"
@@ -51,6 +61,7 @@ export default function Signup() {
           required
           disabled={loading}
         />
+
         <input
           type="email"
           placeholder="Email"
@@ -59,6 +70,7 @@ export default function Signup() {
           required
           disabled={loading}
         />
+
         <input
           type="password"
           placeholder="Password"
@@ -67,6 +79,7 @@ export default function Signup() {
           required
           disabled={loading}
         />
+
         <input
           type="password"
           placeholder="Confirm Password"
@@ -75,11 +88,15 @@ export default function Signup() {
           required
           disabled={loading}
         />
+
         <button type="submit" disabled={loading}>
-          {loading ? 'Creating Account...' : 'Sign Up'}
+          {loading ? "Creating Account..." : "Sign Up"}
         </button>
       </form>
-      <p>Already have an account? <a href="/login">Login here</a></p>
+
+      <p>
+        Already have an account? <a href="/login">Login here</a>
+      </p>
     </div>
   );
 }
