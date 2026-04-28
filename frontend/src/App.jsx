@@ -37,20 +37,24 @@ function AppContent() {
         <Link to="/" style={{ marginRight: '20px' }}>
           💰 Tech Salary Scale
         </Link>
+
+        {/* Always visible */}
+        <Link to="/dashboard" style={{ marginRight: '20px' }}>
+          Dashboard
+        </Link>
+        <Link to="/submit" style={{ marginRight: '20px' }}>
+          Submit Salary
+        </Link>
+        <Link to="/search" style={{ marginRight: '20px' }}>
+          Search Salaries
+        </Link>
+        <Link to="/stats" style={{ marginRight: '20px' }}>
+          Statistics
+        </Link>
+
+        {/* Conditional */}
         {isLoggedIn ? (
           <>
-            <Link to="/dashboard" style={{ marginRight: '20px' }}>
-              Dashboard
-            </Link>
-            <Link to="/submit" style={{ marginRight: '20px' }}>
-              Submit Salary
-            </Link>
-            <Link to="/search" style={{ marginRight: '20px' }}>
-              Search Salaries
-            </Link>
-            <Link to="/stats" style={{ marginRight: '20px' }}>
-              Statistics
-            </Link>
             <Link to="/vote" style={{ marginRight: '20px' }}>
               Vote
             </Link>
@@ -64,18 +68,6 @@ function AppContent() {
             <Link to="/signup" style={{ marginRight: '20px' }}>
               Sign Up
             </Link>
-            <Link to="/dashboard" style={{ marginRight: '20px' }}>
-              Dashboard
-            </Link>
-            <Link to="/submit" style={{ marginRight: '20px' }}>
-              Submit Salary
-            </Link>
-            <Link to="/search" style={{ marginRight: '20px' }}>
-              Search Salaries
-            </Link>
-            <Link to="/stats" style={{ marginRight: '20px' }}>
-              Statistics
-            </Link>
           </>
         )}
       </nav>
@@ -85,18 +77,25 @@ function AppContent() {
           <Route path="/" element={<Home isLoggedIn={isLoggedIn} />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
-          <Route path="/dashboard" element={isLoggedIn ? <Dashboard /> : <Login />} />
-          <Route path="/submit" element={isLoggedIn ? <SalaryForm /> : <Login />} />
+
+          {/* Public routes */}
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/submit" element={<SalaryForm />} />
           <Route path="/search" element={<SearchSalaries />} />
           <Route path="/stats" element={<Statistics />} />
-          <Route path="/vote" element={isLoggedIn ? <VoteSubmission /> : <Login />} />
+
+          {/* Protected route */}
+          <Route
+            path="/vote"
+            element={isLoggedIn ? <VoteSubmission /> : <Login />}
+          />
         </Routes>
       </main>
 
-      <footer style={{ 
-        backgroundColor: '#f5f5f5', 
-        padding: '20px', 
-        textAlign: 'center', 
+      <footer style={{
+        backgroundColor: '#f5f5f5',
+        padding: '20px',
+        textAlign: 'center',
         color: '#666',
         marginTop: '50px',
         borderTop: '1px solid #ddd'
