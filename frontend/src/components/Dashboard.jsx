@@ -7,6 +7,7 @@ export default function Dashboard() {
   const [userInfo, setUserInfo] = useState(null);
   const [currentSlide, setCurrentSlide] = useState(0);
   const navigate = useNavigate();
+  const isLoggedIn = !!getAuthToken();
 
   const testimonials = [
     {
@@ -58,16 +59,16 @@ export default function Dashboard() {
   ];
 
   useEffect(() => {
-  const storedUser = localStorage.getItem('userInfo');
-  if (storedUser) {
-    setUserInfo(JSON.parse(storedUser));
-  }
+    const storedUser = localStorage.getItem('userInfo');
+    if (storedUser) {
+      setUserInfo(JSON.parse(storedUser));
+    }
 
-  const timer = setInterval(() => {
-    setCurrentSlide((prev) => (prev + 1) % testimonials.length);
-  }, 5000);
-  return () => clearInterval(timer);
-}, []);
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % testimonials.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, []);
 
 
   const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % testimonials.length);
@@ -164,8 +165,11 @@ export default function Dashboard() {
         <div className="dashboard-card card-vote">
           <h2>🗳️ Vote & Moderate</h2>
           <p>Help moderate submissions by voting. Upvotes approve entries to the public database.</p>
-          <button onClick={() => navigate('/vote')} className="btn-primary">
-            → Start Voting
+          <button
+            onClick={() => navigate(isLoggedIn ? '/vote' : '/login')}
+            className="btn-primary"
+          >
+            → Start Voting {!isLoggedIn && '(Login Required)'}
           </button>
         </div>
       </div>
