@@ -64,6 +64,18 @@ function AppContent() {
             <Link to="/signup" style={{ marginRight: '20px' }}>
               Sign Up
             </Link>
+            <Link to="/dashboard" style={{ marginRight: '20px' }}>
+              Dashboard
+            </Link>
+            <Link to="/submit" style={{ marginRight: '20px' }}>
+              Submit Salary
+            </Link>
+            <Link to="/search" style={{ marginRight: '20px' }}>
+              Search Salaries
+            </Link>
+            <Link to="/stats" style={{ marginRight: '20px' }}>
+              Statistics
+            </Link>
           </>
         )}
       </nav>
