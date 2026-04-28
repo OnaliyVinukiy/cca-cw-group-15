@@ -118,8 +118,6 @@ export default function SalaryForm() {
             onChange={handleChange}
             required
             disabled={loading}
-            min="1"
-            step="1000"
           />
         </div>
 
