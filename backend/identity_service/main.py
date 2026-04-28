@@ -12,6 +12,10 @@ import os
 from dotenv import load_dotenv
 from sqlalchemy import text
 
+
+from jose import jwt, JWTError
+from identity_service.auth import SECRET_KEY, ALGORITHM
+
 # Load environment variables from .env
 load_dotenv()
 
@@ -68,3 +72,16 @@ def login(user: UserLogin, db: Session = Depends(get_db)):
         "access_token": token,
         "token_type": "bearer"
     }
+
+
+#  verify endpoint 
+@app.get("/verify")
+def verify_token(token: str):
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        return {
+            "valid": True,
+            "user_id": payload.get("user_id")  # matches your existing JWT format
+        }
+    except JWTError:
+        raise HTTPException(status_code=401, detail="Invalid token")

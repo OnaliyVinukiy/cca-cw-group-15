@@ -1,17 +1,15 @@
-import axios from 'axios';
+import axios from "axios";
 
-
-const API_BASE_URL = ''; 
+const API_BASE_URL = "/api";
 const API_BASE = {
-  identity: `${API_BASE_URL}/api`,
-  salary: `${API_BASE_URL}/api`,
-  search: `${API_BASE_URL}/api`,
-  stats: `${API_BASE_URL}/api`,
-  vote: `${API_BASE_URL}/api`,
+  identity: `${API_BASE_URL}`,
+  salary: `${API_BASE_URL}`,
+  search: `${API_BASE_URL}`,
+  stats: `${API_BASE_URL}`,
+  vote: `${API_BASE_URL}`,
 };
-
 // Store JWT token from login
-let authToken = localStorage.getItem('authToken') || null;
+let authToken = localStorage.getItem("authToken") || null;
 
 // ============================================
 // AUTHENTICATION APIS
@@ -50,7 +48,7 @@ export const login = async (email, password) => {
       password,
     });
     authToken = response.data.access_token;
-    localStorage.setItem('authToken', authToken);
+    localStorage.setItem("authToken", authToken);
     return response.data;
   } catch (error) {
     throw error.response?.data || error;
@@ -87,13 +85,13 @@ export const submitSalary = async (salaryData) => {
 export const searchSalaries = async (filters) => {
   try {
     const params = new URLSearchParams();
-    if (filters.role) params.append('role', filters.role);
-    if (filters.company) params.append('company', filters.company);
-    if (filters.country) params.append('country', filters.country);
-    if (filters.level) params.append('level', filters.level);
+    if (filters.role) params.append("role", filters.role);
+    if (filters.company) params.append("company", filters.company);
+    if (filters.country) params.append("country", filters.country);
+    if (filters.level) params.append("level", filters.level);
 
     const response = await axios.get(
-      `${API_BASE.search}/search?${params.toString()}`
+      `${API_BASE.search}/search?${params.toString()}`,
     );
     return response.data;
   } catch (error) {
@@ -113,13 +111,13 @@ export const searchSalaries = async (filters) => {
 export const getStats = async (filters) => {
   try {
     const params = new URLSearchParams();
-    if (filters.role) params.append('role', filters.role);
-    if (filters.company) params.append('company', filters.company);
-    if (filters.country) params.append('country', filters.country);
-    if (filters.level) params.append('level', filters.level);
+    if (filters.role) params.append("role", filters.role);
+    if (filters.company) params.append("company", filters.company);
+    if (filters.country) params.append("country", filters.country);
+    if (filters.level) params.append("level", filters.level);
 
     const response = await axios.get(
-      `${API_BASE.stats}/stats?${params.toString()}`
+      `${API_BASE.stats}/stats?${params.toString()}`,
     );
     return response.data;
   } catch (error) {
@@ -146,7 +144,7 @@ export const voteOnSubmission = async (submissionId, voteType) => {
         headers: {
           Authorization: `Bearer ${authToken}`,
         },
-      }
+      },
     );
     return response.data;
   } catch (error) {
@@ -169,5 +167,5 @@ export const getAuthToken = () => authToken;
  */
 export const clearAuthToken = () => {
   authToken = null;
-  localStorage.removeItem('authToken');
+  localStorage.removeItem("authToken");
 };

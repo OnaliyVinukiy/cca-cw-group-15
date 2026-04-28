@@ -1,28 +1,59 @@
+import os
 import bcrypt
 from jose import jwt
 from datetime import datetime, timedelta
-import os
+
+
+# CONFIG
 
 SECRET_KEY = os.getenv("SECRET_KEY", "supersecret")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60
 
 
-def hash_password(password: str):
-    return bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
+# PASSWORD HASHING
 
 
-def verify_password(plain_password: str, hashed_password: str):
+def hash_password(password: str) -> str:
+    """
+    Hash plain password using bcrypt
+    """
+    return bcrypt.hashpw(
+        password.encode("utf-8"),
+        bcrypt.gensalt()
+    ).decode("utf-8")
+
+
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    """
+    Verify plain password against hashed password
+    """
     return bcrypt.checkpw(
-        plain_password.encode(),
-        hashed_password.encode()
+        plain_password.encode("utf-8"),
+        hashed_password.encode("utf-8")
     )
 
 
-def create_access_token(user_id: str):
+
+# JWT TOKEN CREATION
+
+
+def create_access_token(user_id: str) -> str:
+    """
+    Create JWT token with user_id claim
+    (This is what other microservices decode)
+    """
     expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+
     payload = {
         "user_id": user_id,
         "exp": expire
     }
-    return jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
+
+    token = jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
+
+    # python-jose sometimes returns bytes depending on version
+    if isinstance(token, bytes):
+        token = token.decode("utf-8")
+
+    return token
