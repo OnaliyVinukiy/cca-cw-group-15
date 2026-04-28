@@ -27,7 +27,7 @@ def calculate_stats(
     level: Optional[str] = None,
     db: Session = Depends(get_db)
     ):
-    query = db.query(SalarySubmission).filter(SalarySubmission.status == "PENDING")
+    query = db.query(SalarySubmission).filter(SalarySubmission.status == "APPROVED")
     query = apply_filters(query, role, company, country, level)
     # Define percentiles to calculate
     percentiles = [0.25, 0.5, 0.75]
