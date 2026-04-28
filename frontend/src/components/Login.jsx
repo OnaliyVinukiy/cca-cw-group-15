@@ -1,29 +1,42 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { login } from '../services/api';
-import '../styles/Auth.css';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { login } from "../services/api";
+import "../styles/Auth.css";
 
 export default function Login() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError('');
+    setError("");
+    setSuccess("");
+
     try {
       const response = await login(email, password);
-      // Store user info for dashboard
-      localStorage.setItem('userInfo', JSON.stringify({
-        username: response.username || 'User',
-        email: email
-      }));
-      navigate('/dashboard');
+
+      localStorage.setItem(
+        "userInfo",
+        JSON.stringify({
+          username: response.username || "User",
+          email: email,
+        }),
+      );
+
+      localStorage.setItem("authToken", response.access_token);
+
+      setSuccess("Login successful! Redirecting...");
+
+      setTimeout(() => {
+        navigate("/dashboard");
+      }, 1200);
     } catch (err) {
-      setError(err.detail || 'Login failed. Please check your credentials.');
+      setError(err.detail || "Login failed. Please check your credentials.");
     } finally {
       setLoading(false);
     }
@@ -32,8 +45,11 @@ export default function Login() {
   return (
     <div className="login-container">
       <h2>Login</h2>
+
       <form onSubmit={handleLogin}>
         {error && <div className="error-message">{error}</div>}
+        {success && <div className="success-message">{success}</div>}
+
         <input
           type="email"
           placeholder="Email"
@@ -42,6 +58,7 @@ export default function Login() {
           required
           disabled={loading}
         />
+
         <input
           type="password"
           placeholder="Password"
@@ -50,11 +67,15 @@ export default function Login() {
           required
           disabled={loading}
         />
+
         <button type="submit" disabled={loading}>
-          {loading ? 'Logging in...' : 'Login'}
+          {loading ? "Logging in..." : "Login"}
         </button>
       </form>
-      <p>Don't have an account? <a href="/signup">Sign up here</a></p>
+
+      <p>
+        Don't have an account? <a href="/signup">Sign up here</a>
+      </p>
     </div>
   );
 }
