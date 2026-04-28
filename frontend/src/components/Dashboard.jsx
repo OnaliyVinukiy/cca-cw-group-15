@@ -58,24 +58,17 @@ export default function Dashboard() {
   ];
 
   useEffect(() => {
-    // Check if user is logged in
-    if (!getAuthToken()) {
-      navigate('/login');
-      return;
-    }
+  const storedUser = localStorage.getItem('userInfo');
+  if (storedUser) {
+    setUserInfo(JSON.parse(storedUser));
+  }
 
-    // Try to get user info from localStorage (set during login)
-    const storedUser = localStorage.getItem('userInfo');
-    if (storedUser) {
-      setUserInfo(JSON.parse(storedUser));
-    }
+  const timer = setInterval(() => {
+    setCurrentSlide((prev) => (prev + 1) % testimonials.length);
+  }, 5000);
+  return () => clearInterval(timer);
+}, []);
 
-    // Auto-rotate slides
-    const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % testimonials.length);
-    }, 5000);
-    return () => clearInterval(timer);
-  }, [navigate]);
 
   const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % testimonials.length);
   const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + testimonials.length) % testimonials.length);
