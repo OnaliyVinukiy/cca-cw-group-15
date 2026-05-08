@@ -26,37 +26,49 @@ def calculate_stats(
     country: Optional[str] = None,
     level: Optional[str] = None,
     db: Session = Depends(get_db)
-    ):
-    query = db.query(SalarySubmission).filter(SalarySubmission.status == "APPROVED")
+):
+    query = db.query(SalarySubmission).filter(
+        SalarySubmission.status.ilike("approved")
+    )
+
+    # Apply optional filters
     query = apply_filters(query, role, company, country, level)
-    # Define percentiles to calculate
+
+    # Percentiles
     percentiles = [0.25, 0.5, 0.75]
-    percentile_labels = ["p25_salary", "median_salary", "p75_salary"]
-    
-    stats_query = [
+
+    stats = query.with_entities(
         func.count(SalarySubmission.id).label("count"),
         func.avg(SalarySubmission.amount).label("avg_salary"),
         func.min(SalarySubmission.amount).label("min_salary"),
         func.max(SalarySubmission.amount).label("max_salary"),
-    ]
 
-    stats_query += [
-        func.percentile_cont(p).within_group(SalarySubmission.amount.asc()).label(label)
-        for p, label in zip(percentiles, percentile_labels)
-    ]
+        func.percentile_cont(0.25)
+        .within_group(SalarySubmission.amount.asc())
+        .label("p25_salary"),
 
-    stats = query.with_entities(*stats_query).one()
-    return { "stats": Stats(
-        count = stats.count,
-        avg_salary = float(stats.avg_salary or 0),
-        min_salary = float(stats.min_salary or 0),
-        max_salary = float(stats.max_salary or 0),
-        median_salary = float(stats.median_salary or 0),
-        p25_salary = float(stats.p25_salary or 0),
-        p75_salary = float(stats.p75_salary or 0)
-    ),
-    "message": "Stats calculated"  
+        func.percentile_cont(0.5)
+        .within_group(SalarySubmission.amount.asc())
+        .label("median_salary"),
+
+        func.percentile_cont(0.75)
+        .within_group(SalarySubmission.amount.asc())
+        .label("p75_salary"),
+    ).one()
+
+    return {
+        "stats": Stats(
+            count=stats.count,
+            avg_salary=float(stats.avg_salary or 0),
+            min_salary=float(stats.min_salary or 0),
+            max_salary=float(stats.max_salary or 0),
+            median_salary=float(stats.median_salary or 0),
+            p25_salary=float(stats.p25_salary or 0),
+            p75_salary=float(stats.p75_salary or 0),
+        ),
+        "message": "Stats calculated"
     }
+
 
 def apply_filters(query, role, company, country, level):
     if role:
@@ -67,4 +79,5 @@ def apply_filters(query, role, company, country, level):
         query = query.filter(SalarySubmission.country == country)
     if level:
         query = query.filter(SalarySubmission.experience_level == level)
+
     return query
