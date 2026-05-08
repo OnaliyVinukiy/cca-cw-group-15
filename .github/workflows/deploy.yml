@@ -72,12 +72,12 @@ jobs:
       - name: Update Image Tags in YAMLs
         run: |
           SHA=${{ github.sha }}
-          sed -i "s|image: techsalaryscale.azurecr.io/identity_service:.*|image: techsalaryscale.azurecr.io/identity_service:$SHA|g" k8s/app/identity-deployment.yaml
-          sed -i "s|image: techsalaryscale.azurecr.io/salary_service:.*|image: techsalaryscale.azurecr.io/salary_service:$SHA|g" k8s/app/salary-deployment.yaml
-          sed -i "s|image: techsalaryscale.azurecr.io/search_service:.*|image: techsalaryscale.azurecr.io/search_service:$SHA|g" k8s/app/search-deployment.yaml
-          sed -i "s|image: techsalaryscale.azurecr.io/stats_service:.*|image: techsalaryscale.azurecr.io/stats_service:$SHA|g" k8s/app/stats-deployment.yaml
-          sed -i "s|image: techsalaryscale.azurecr.io/vote_service:.*|image: techsalaryscale.azurecr.io/vote_service:$SHA|g" k8s/app/vote-deployment.yaml
-          sed -i "s|image: techsalaryscale.azurecr.io/bff_service:.*|image: techsalaryscale.azurecr.io/bff_service:$SHA|g" k8s/app/bff-deployment.yaml
+          sed -i "s|image: techsalaryscale.azurecr.io/identity_service:.*|image: techsalaryscale.azurecr.io/identity_service:$SHA|g" k8s/app/identity-service-deployment.yaml
+          sed -i "s|image: techsalaryscale.azurecr.io/salary_service:.*|image: techsalaryscale.azurecr.io/salary_service:$SHA|g" k8s/app/salary-service-deployment.yaml
+          sed -i "s|image: techsalaryscale.azurecr.io/search_service:.*|image: techsalaryscale.azurecr.io/search_service:$SHA|g" k8s/app/search-service-deployment.yaml
+          sed -i "s|image: techsalaryscale.azurecr.io/stats_service:.*|image: techsalaryscale.azurecr.io/stats_service:$SHA|g" k8s/app/stats-service-deployment.yaml
+          sed -i "s|image: techsalaryscale.azurecr.io/vote_service:.*|image: techsalaryscale.azurecr.io/vote_service:$SHA|g" k8s/app/vote-service-deployment.yaml
+          sed -i "s|image: techsalaryscale.azurecr.io/bff_service:.*|image: techsalaryscale.azurecr.io/bff_service:$SHA|g" k8s/app/bff-service-deployment.yaml
           sed -i "s|image: techsalaryscale.azurecr.io/frontend:.*|image: techsalaryscale.azurecr.io/frontend:$SHA|g" k8s/app/frontend-deployment.yaml
 
       - name: Commit and Push Changes
