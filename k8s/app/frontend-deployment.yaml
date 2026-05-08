@@ -17,7 +17,7 @@ spec:
         - name: acr-secret
       containers:
         - name: frontend
-          image: techsalaryscale.azurecr.io/frontend:v1
+          image: techsalaryscale.azurecr.io/frontend:2ab7145fa5be7445222ef5838651ff699fe8dd2d
           imagePullPolicy: Always
           ports:
             - containerPort: 80
