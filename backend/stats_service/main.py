@@ -94,5 +94,5 @@ def calculate_stats(
             p25_salary=float(stats_result.p25_salary or 0),
             p75_salary=float(stats_result.p75_salary or 0),
         ),
-        "message": "Stats calculated successfully"
+        "message": "Stats calculated successfully - v2"
     }
