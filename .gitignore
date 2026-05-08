@@ -3,7 +3,6 @@ __pycache__/
 *.py[cod]
 *$py.class
 venv/
-.env
 .venv
 env/
 instance/
@@ -24,7 +23,6 @@ secrets/*.yaml
 !k8s/config/secrets-template.yaml
 
 # IDEs & System
-.vscode/
 .idea/
 .DS_Store
 Thumbs.db
@@ -33,3 +31,4 @@ Thumbs.db
 *.sql.gz
 *.sqlite3
 pgdata/
+config.bat
