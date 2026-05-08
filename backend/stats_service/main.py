@@ -28,14 +28,11 @@ def calculate_stats(
     db: Session = Depends(get_db)
 ):
     query = db.query(SalarySubmission).filter(
-        SalarySubmission.status.ilike("approved")
+        SalarySubmission.status == "APPROVED"
     )
 
     # Apply optional filters
     query = apply_filters(query, role, company, country, level)
-
-    # Percentiles
-    percentiles = [0.25, 0.5, 0.75]
 
     stats = query.with_entities(
         func.count(SalarySubmission.id).label("count"),
@@ -58,7 +55,7 @@ def calculate_stats(
 
     return {
         "stats": Stats(
-            count=stats.count,
+            count=stats.count or 0,
             avg_salary=float(stats.avg_salary or 0),
             min_salary=float(stats.min_salary or 0),
             max_salary=float(stats.max_salary or 0),
